@@ -1,0 +1,83 @@
+% \ifempty command:
+\newcommand{\ifempty}[3]{\ifthenelse{\equal{#1}{}}{#2}{#3}}
+
+% Style footnotes.
+\setlength{\skip\footins}{\baselineskip}
+\renewcommand{\footnotelayout}{\setstretch{1.5}}
+\setlength{\footnotemargin}{1em}
+
+% Typewriter font:
+\renewcommand*{\ttdefault}{pcr}  % Courier
+\newcommand{\code}[1]{\texttt{#1}}
+
+% Define some colours.
+\definecolor{darkblue} {rgb} {0.0 , 0.0 , 0.65}
+\definecolor{darkred}  {rgb} {0.80, 0.0 , 0.0 }
+\definecolor{darkgreen}{rgb} {0.0 , 0.50, 0.0 }
+\definecolor{gray75}   {gray}{0.75}
+
+% Define shortcuts for colours.
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+\newcommand{\darkred}[1]{{\color{darkred} #1}}
+\newcommand{\darkblue}[1]{{\color{darkblue} #1}}
+\newcommand{\darkgreen}[1]{{\color{darkgreen} #1}}
+\newcommand{\magenta}[1]{{\color{magenta} #1}}
+\newcommand{\grey}[1]{{\color{gray} #1}}
+
+% Load TikZ libraries.
+\usetikzlibrary{
+    calc,
+    positioning,
+    fit,
+    tikzmark,
+    arrows.meta,
+    shapes,
+    decorations.pathreplacing
+}
+% Graphical models:
+\tikzset{
+    line/.style = {
+        thick,
+        ->,
+        > = {
+            Triangle[length=2.0mm, width=2.0mm]
+        }
+    },
+    arrow/.style = {
+        line
+    },
+    % Invisible node:
+    hidden node/.style = {
+        circle,
+        minimum size = 1cm,
+        draw = white,
+        thick
+    },
+    % Latent variable:
+    latent node/.style = {
+        hidden node,
+        draw = black,
+    },
+    % Latent variable:
+    factor node/.style = {
+        hidden node,
+        rectangle,
+        draw = black,
+    },
+    % Observed variable:
+    observed node/.style = {
+        latent node,
+        fill = gray!15
+    },
+    % Plate:
+    plate/.style = {
+        draw,
+        label={[anchor=north west]south west:#1},
+        rounded corners=2pt,
+        shape=rectangle,
+        inner sep=10pt,
+        thick
+    }
+}

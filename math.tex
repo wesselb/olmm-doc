@@ -1,0 +1,190 @@
+% Define \charfusion. From https://tex.stackexchange.com/a/52673.
+\makeatletter
+\def\moverlay{\mathpalette\mov@rlay}
+\def\mov@rlay#1#2{\leavevmode\vtop{%
+   \baselineskip\z@skip \lineskiplimit-\maxdimen
+   \ialign{\hfil$\m@th#1##$\hfil\cr#2\crcr}}}
+    \newcommand{\charfusion}[3][\mathord]{
+        #1{\ifx#1\mathop\vphantom{#2}\fi
+        \mathpalette\mov@rlay{#2\cr#3}}
+        \ifx#1\mathop\expandafter\displaylimits\fi
+    }
+\makeatother
+
+% Bold characters:
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\vecu}[1]{\hat{\vec{#1}}}
+\newcommand{\mat}[1]{\vec{#1}}
+
+% Letters commonly used in blackboard bold font:
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\N}{\mathbb{N}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\eR}{\overline{\mathbb{R}}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\Z}{\mathbb{Z}}
+
+% Letters commonly used in calligraphic font:
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\Cc}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Ec}{\mathcal{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\G}{\mathcal{G}}
+\renewcommand{\H}{\mathcal{H}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\Jrat}{\mathcal{J}_{\text{rat}}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\Li}{\mathcal{L}{}^1}
+\newcommand{\eLi}{\overline{\mathcal{L}}{}^1}
+\newcommand{\m}{\text{m}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\eM}{\overline{\mathcal{M}}}
+\newcommand{\Nc}{\mathcal{N}}
+\renewcommand{\O}{\mathcal{O}}
+\newcommand{\Rc}{\mathcal{R}}
+\renewcommand{\S}{\mathcal{S}}
+\newcommand{\Tc}{\mathcal{T}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\Vc}{\mathcal{V}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\Zc}{\mathcal{Z}}
+
+% Letters commonly used in sans serif font:
+\newcommand{\T}{\text{\textsf{T}}}
+\renewcommand{\c}{\text{\textsf{c}}}
+
+% Symbols:
+\newcommand{\es}{\varnothing}
+\newcommand{\e}{\varepsilon}
+\newcommand{\sub}{\subseteq}
+\renewcommand{\d}{\partial}
+\renewcommand{\th}{\theta}
+\newcommand{\Th}{\Theta}
+
+% Convergence symbols:
+\newcommand{\oto}[1]{\overset{#1}{\to}}
+\newcommand{\uto}[1]{\underset{#1}{\to}}
+\newcommand{\outo}[2]{\overset{#1}{\underset{#2}{\to}}}
+\newcommand{\Lto}[1]{\oto{\L^{#1}}}
+
+% Operators:
+\DeclareMathOperator*{\argmax}{arg\,max\,}
+\DeclareMathOperator*{\argmin}{arg\,min\,}
+\let\max\relax\DeclareMathOperator*{\max}{max\,}
+\let\min\relax\DeclareMathOperator*{\min}{min\,}
+\let\sup\relax\DeclareMathOperator*{\sup}{sup\,}
+\let\inf\relax\DeclareMathOperator*{\inf}{inf\,}
+\let\limsup\relax\DeclareMathOperator*{\limsup}{lim\,sup\,}
+\let\liminf\relax\DeclareMathOperator*{\liminf}{lim\,inf\,}
+\newcommand{\card}{\#}
+\newcommand{\cconv}{\circledast}
+\newcommand{\chol}{\operatorname{chol}\,}
+\newcommand{\ch}{\operatorname{ch}\,}
+\newcommand{\cliques}{\operatorname{cliques}\,}
+\newcommand{\cl}{\operatorname{cl}\,}
+\newcommand{\col}{\operatorname{col}\,}
+\newcommand{\comp}{\circ}
+\newcommand{\contains}{\supseteq}
+\newcommand{\conv}{\ast}
+\newcommand{\cov}{\operatorname{cov}\,}
+\newcommand{\diag}{\operatorname{diag}\,}
+\renewcommand{\dim}{\operatorname{dim}\,}
+\newcommand{\dotcup}{\charfusion[\mathbin]{\cup}{\cdot}}
+\newcommand{\dotunion}{\charfusion[\mathop]{\bigcup}{\cdot}}
+\newcommand{\had}{\circ}
+\renewcommand{\Im}{\operatorname{Im}\,}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\intersection}{\bigcap}
+\newcommand{\KL}{\operatorname{D}_{\text{KL}}}
+\newcommand{\KOT}{\operatorname{KOT}\,}
+\newcommand{\kron}{\otimes}
+\newcommand{\MOT}{\operatorname{MOT}\,}
+\newcommand{\push}{_\#}
+\newcommand{\rank}{\operatorname{rank}\,}
+\renewcommand{\Re}{\operatorname{Re}\,}
+\newcommand{\row}{\operatorname{row}\,}
+\newcommand{\schur}{\operatorname{Schur}\,}
+\newcommand{\sign}{\operatorname{sign}\,}
+\newcommand{\supp}{\operatorname{supp}\,}
+\newcommand{\tr}{\operatorname{tr}\,}
+\newcommand{\union}{\bigcup}
+\newcommand{\vecspan}{\operatorname{span}\,}
+\newcommand{\vol}{\operatorname{vol}\,}
+
+% Probability distributions:
+\newcommand{\Ber}{\operatorname{Ber}}
+\newcommand{\Beta}{\operatorname{Beta}}
+\newcommand{\Bin}{\operatorname{Bin}}
+\newcommand{\Cat}{\operatorname{Cat}}
+\newcommand{\Dir}{\operatorname{Dir}}
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Gam}{\operatorname{Gamma}}
+\newcommand{\Geom}{\operatorname{Geom}}
+\newcommand{\GP}{\mathcal{GP}}
+\newcommand{\InvWishart}{\mathcal{W}^{-1}}
+\newcommand{\LogNormal}{\log\mathcal{N}}
+\newcommand{\Mult}{\operatorname{Mult}}
+\newcommand{\NegBin}{\operatorname{NegBin}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\Poisson}{\operatorname{Poisson}}
+\newcommand{\Wishart}{\mathcal{W}}
+
+% Probability commands:
+\newcommand{\Var}{\V}
+\newcommand{\Lik}{\L}
+
+% Special math commands:
+\newcommand{\cond}{\, | \,}                % Conditioning
+\newcommand{\middlecond}{\, \middle| \,}   % Conditioning between a \left and \right
+\newcommand{\divsep}{\,\|\,}               % Separator in divergences
+
+\newcommand{\sd}[1]{\mathrm{d} #1}         % Straight 'd' in integral
+\newcommand{\isd}[1]{\, \mathrm{d} #1}     % Straight 'd' in integral with spacing
+
+\newcommand{\idf}{\text{\textsf{id}}}      % Identity function
+\newcommand{\sce}{\text{\sc{e}}}           % Scientific notation
+\newcommand{\vardot}{\,\cdot\,}            % Variable dot
+\renewcommand{\ss}[1]{_\mathit{#1}}        % Subscripts without spacing
+
+% Half refactangle
+\newcommand{\halfrect}[2]{[\![#1,#2)\hspace{-1pt}\!)}
+\newcommand{\Rint}{\text{(R)}\int}
+
+% Paired delimiters:
+\DeclarePairedDelimiter\parens{(}{)}           % Parentheses
+\DeclarePairedDelimiter\sbrac{[}{]}            % Square brackets
+\DeclarePairedDelimiter\cbrac{\{}{\}}          % Curly braces
+\DeclarePairedDelimiter\set{\{}{\}}            % Set
+\DeclarePairedDelimiter\lra{\langle}{\rangle}  % Angle brackets
+
+% Shortcuts for angle brackets:
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+\newcommand{\lla}{\left\langle}
+\newcommand{\rra}{\right\rangle}
+
+% Other commands:
+\newcommand{\resp}[1]{[#1]}                  % Respective statement
+\newcommand{\bs}{\textbackslash}             % Blackslash in text
+% Use \cref in a title.
+\newcommand{\creftitle}[2]{\texorpdfstring{\cref{#2}}{#1 \ref{#2}}}
+\newcommand{\mcheckthis}{{}^{[\checkmark]}}  % Checkmark in math
+\newcommand{\checkthis}{$\mcheckthis$}       % Checkmark in text
+
+% Compatibility with old commands:
+\newcommand{\id}[1]{\sd{#1}}
+\newcommand{\sargmax}[1]{\argmin_{#1}}
+\newcommand{\sargmin}[1]{\argmax_{#1}}
+\newcommand{\lrset}[1]{\set*{#1}}
+\newcommand{\middleCond}{\middlecond}
+\newcommand{\rel}[2]{($(#1) + (#2)$)}
+\newcommand{\blackLinks}{}
+\newcommand{\Ac}{\A}

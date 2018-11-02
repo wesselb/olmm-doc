@@ -1,0 +1,241 @@
+\documentclass{article}
+\PassOptionsToPackage{numbers, compress}{natbib}
+\usepackage[]{nips_2018}  % Options: preprint, final, nonatbib
+\include{preamble}
+
+\title{The Orthogonal Linear Mixing Model (OLMM)}
+
+\author{
+    Authors
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    Gaussian processes form a popular and powerful modelling framework for single-output regression.
+    Application in the multi-output setting typically yields models that scale cubically in the desired number of degrees of freedom of the observations $m$, which becomes prohibitively expensive for complex data sets.
+    We present the Orthogonal Linear Mixing Model (OLMM), which is a multi-output Gaussian process model that scales linearly in $m$.
+    The OLMM is simple to implement and trivially compatible with existing single-output GP scaling techniques.
+    We demonstrate the OLMM in preliminary experiments on synthetic and real-world data sets.
+\end{abstract}
+
+\section{Introduction}
+Stemming from their interpretability, modularity, and tractability, Gaussian processes (GPs) form a popular and powerful modelling framework for single-output regression \cite{Rasmussen:2006:Gaussian_Processes}.
+Gaussian processes are not limited to single-output problems:
+the application of GPs to multi-output regression problems goes back a long way, with some of the first applications being in geostatistics
+\cite{Goovaerts:1997:Geostatistics_for_Natural_Resources_Evaluation,Stein:1999:Interpolation_of_Spatial_Data,Wackernagel:2003:Multivariate_Geostatistics}.
+
+Many flavours of multi-output GP (MOGP) models can be found in the current literature \cite{Wackernagel:2003:Multivariate_Geostatistics,Teh:2005:Semiparametric_Latent_Factor,Boyle:2005:Dependent_Gaussian_Processes,Bonilla:2007:Kernel_Multi-Task_Learning_Using_Task-Specific,Bonilla:2008:Multi-Task_Gaussian_Process,Osborne:2008:Towards_Real-Time_Information_Processing_of,Alvarez:2009:Latent_Force_Models,Alvarez:2009:Sparse_Convolved_Gaussian_Processes_for,Yu:2009:Gaussian-Process_Factor_Analysis_for_Low-Dimensional,Alvarez:2010:Efficient_Multioutput_Gaussian_Processes_Through,Alvarez:2011:Computationally_Efficient_Convolved,Wilson:2012:GP_Regression_Networks,Nguyen:2014:Collaborative_Multi-Output,Ulrich:2015:Cross_Spectrum,Bruinsma:2016:GGPCM,Parra:2017:Spectral_Mixture_Kernels_for_Multi-Output,Requeima:2018:The_Gaussian_Process_Autoregressive_Regression}.
+Although these models are generally constructed in a similar spirit, they differ in their details and terminology, which makes them difficult to compare and organise.
+As an attempt to simplify this complicated web of models, we formulate the Linear Mixing Model (LMM), which is a simple class of MOGP models typically characterised by low-rank covariance structure.
+Importantly, the LMM encapsulates the majority of the literature and is intuitive to reason about.
+
+A key problem with MOGPs is their computational complexity.
+For $n$ data points each having $p$ outputs, inference and learning in general MOGPs take $\O(n^3p^3)$ time and $\O(n^2p^2)$ memory, although these may be alleviated by a wide range of approximations \cite{Quinonero:2005:Unifying_View,Titsias:2009:Variational_Learning,Lazaro-Gredilla:2010:Sparse_Spectrum_Gaussian_Process_Regression,Hensman:2013:Gaussian_Processes_for_Big_Data,Wilson:2015:Kernel_Interpolation_for_Scalable_Structured,Bui:2016:A_Unifying_Framework_for_Gaussian,Cheng:2017:Variational_Inference_for_Gaussian_Process}.
+To mitigate these unfavourable complexities, MOGP models in the LMM class exploit the low-rank structure of their covariance matrices via the matrix inversion and determinant lemmas to reduce the complexity of inference and learning to $\O(n^3m^3)$ time and $\O(n^2 m p)$ memory, where $m$ is the desired degrees of freedom of the observations, typically much less than $p$.
+That said, clearly not all multi-output regression problems will be adequately solved a model with only a few degrees of freedom, making the LMM prohibitively expensive in such cases.
+
+% Although improved, large $m$ can be a necessity for challenging data sets, making the LMM prohibitively expensive in such cases.
+
+In this paper, we present the Orthogonal Linear Mixing Model (OLMM), which is a particular LMM where inference and learning take $\O(n^3m)$ time $\O(n^2 m)$ memory without sacrificing significant expressivity, nor requiring any approximations.
+The OLMM is simple to implement and trivially compatible with existing single-output GP scaling techniques to further bring down the scaling in the number of data points $n$.
+We demonstrate the OLMM in preliminary experiments on synthetic and real-world data sets.
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node at (0, 0) {hey};
+    \end{tikzpicture}
+    \caption{Illustration of the generative model of the LMM}
+    \label{fig:generative_model_lmm}
+\end{figure}
+
+\section{The Linear Mixing Model}
+\label{sec:lmm}
+
+The Linear Mixing Model is given by the following generative model:
+\begin{align} \label{eq:lmm}
+    y(\vardot)\cond f(\vardot) &\sim \GP(f(\vardot), \Lambda), &
+    f(\vardot)\cond H, x &= Hx(\vardot), &
+    x &\sim \GP(0, K(\vardot, \vardot)) \tag{LMM}
+\end{align}
+where $\Lambda=\diag(\sigma_1^2,\ldots,\sigma_p^2)$ is a $p\times p$ diagonal multi-output kernel, $H$ a $p \times m$ matrix, and $K(\vardot,\vardot)$ an $m \times m$ diagonal multi-output kernel, where $K(t, t) := I$.
+Intuitively, the data $y$ is generated by projecting $x$, which takes values in $\R^m$, into the higher dimensional space $\R^p$ via the linear map $H$, and finally adding noise.
+This means that the data lives around the $m$-dimensional subspace that is the columns space of $H$.
+The generative process is illustrated in blah and bleh.
+Two main restrictions: correlations between the outputs are fixed in time, and no delays.
+We call $x$ the \textit{latent processes}: motivation.
+
+Connection with other models.
+
+Discuss data lies on a lower dimensional subspace. Should be able to summarise.
+
+\begin{proposition} \label{prop:augmentation}
+    Augment the LMM by another process $u$:
+    \begin{align*}
+        u(\vardot)\cond x(\vardot) \sim \GP(x(\vardot), (H^\T \Lambda^{-1} H)^{-1}).
+    \end{align*}
+    Then $p(f\cond y) = p(f\cond u=Ty)$ where $T=(H^\T \Lambda^{-1} H)^{-1} H^\T \Lambda^{-1}$.
+\end{proposition}
+
+Elaborate on proposition.
+
+\section{The Orthogonal Linear Mixing Model}
+\label{sec:olmm}
+
+Equation \eqref{eq:lmm} models a multi-output time-series problem as a vector projected into a fixed basis set defined by the columns of the mixing matrix, $H$, with time-varying coefficients given by the latent processes (modelled independently as GPs). The traditional LMM imposes no constraints over $H$, reflecting the usual freedom of basis choice. 
+However, it is often very convenient to choose to work with an orthogonal basis set, as that provides a very simple way of computing the coordinates of a given vector and simplifies some expressions due to vanishing terms. With that in mind, one can opt to decompose $H$ via an SVD into three terms, $U$, $S$ and $V$, with $S$ diagonal and $U$ and $V$ orthogonal (i.e., $U U^\T = I$). 
+By incorporating $V$ into the kernel matrix, i.e.\ by incorporating a rotation into the original latent processes, it is possible to write a new mixing matrix, $H_o$, that defines an orthogonal (but not necessarily orthonormal) base. That is:
+
+\begin{equation}
+    \mathbf{y(t)} = H \mathcal{GP}(0, K) = U S V \mathcal{GP}(0, K) = U S^{1/2} \mathcal{GP}(0, S^{1/2}V K V^\T S^{1/2}) = H_o \mathcal{GP}(0, K_o).
+    \label{ortH}
+\end{equation}
+\todo{The GP notation requires some explanation}
+
+Thus, \cref{ortH} shows that any LMM can be expressed in terms of an orthogonal basis set. 
+That, however, makes it such that now the time-varying coefficients are given by a new GP, defined by a new kernel, $K_o$. 
+For a given time stamp, $t_0$, since the original kernel matrix $K$ is such that the latent processes are independent and normalised, we have that $K_o(t_0, t_0) = S^{1/2}V V^\T S^{1/2} = S$ thus there are no instantaneous correlations between different latent processes. 
+Interestingly enough, when we consider the correlations between two distinct time stamps, $t_0$ and $t_1$, $K(t_1, t_0) \neq I$ thus $K_o(t_1, t_0)$ may not be diagonal, meaning that different latent processes are now correlated in a non-instantaneous way, i.e., while $x_i(t_0)$ and $x_j(t_0)$ are uncorrelated, $x_i(t_0)$ and $x_j(t_1)$ may present correlation. 
+Observing that this kind of behaviour is unusual and not necessarily desirable, we can choose to constrain $H$ such that $S^{1/2}V = I$ and $H = US^{1/2}$, in such a way that our basis set is orthogonal and all latent processes are completely independent, both instantaneously and non-instantaneously. 
+This is the heart of the OLMM and leads to \cref{prop:independent_prediction}. \todo{Need to be much clearer about the $\sigma^2 I$ noise assumption. It's crucial, and it would be misleading not to highlight it.}
+
+\begin{proposition} \label{prop:independent_prediction}
+    Suppose that $H=US^{\frac{1}{2}}$ where $U$ is orthogonal and $S^{\frac{1}{2}}$ is diagonal, and that $\Lambda = \sigma^2 I + H D H^\T$ where $\sigma^2$ is the observation noise and $D$ is the diagonal matrix of the latent process noises.
+    Augment the LMM by another process $u$:
+    \begin{align*}
+        u(\vardot)\cond x(\vardot) \sim \GP(x(\vardot), \sigma^2 S^{-1} + D).
+    \end{align*}
+    Then $p(f\cond y) = p(f\cond u = T y)$ where $T=S^{-\frac{1}{2}} U^\T$.
+\end{proposition}
+
+Note that this choice for $H$ is without loss of generality for $\E(y y^\T)$;
+in other words, we do not restrict the spatial correlation in any way.
+
+In a similar way that much of the power of the LMM comes from allowing us to easily exploit the low rank structure of covariances, the OLMM adds to that by allowing us to explore the independence of the latent processes. 
+The real power of this approach becomes apparent when we look at the probability density function. As stated by \cref{prop:independent_learning}, it decouples the expression into separate contributions from each latent process, effectively reducing the complexity of the learning process from $\O(n^3m^3)$ to $\O(n^3m)$ and painting the perfect scenario for parallelising computations.
+
+\begin{proposition} \label{prop:independent_learning}
+    Assume the conditions from \cref{prop:independent_prediction}.
+    Let $Y$ be observations for $y$ stacked into a $p \times n$ matrix.
+    Then, letting $T_i = S_{ii}^{-\frac{1}{2}}U_{:,i}^\T$,
+    \begin{align*}
+        p(Y)
+        &= \Normal(\operatorname{vec} Y;0,\sigma^2 I_{pn}) \prod_{i=1}^m
+        \frac
+            {\Normal(T_i Y ; 0, K_i + (\sigma^2/S_{ii} + D_{ii}) I_n)}
+            {\Normal(T_i Y ;0, \sigma^2/S_{ii}I_n)}. \qedhere
+    \end{align*}
+\end{proposition}
+
+In practice, computing the expression defined by \cref{prop:independent_learning} is remarkably simple. 
+The first term represents the noise contributions and decouples each time stamp, leading to $n$ single-output GP computations. The product term is computed by projecting the observations $Y$ into the $ith$ latent process, via $Y \xrightarrow{} S^{-1/2}YU_{i,:}$, and doing two single-output GP computations (for each of the $m$ latent processes).
+
+The OLMM, thus, reduces a multi-output GP problem to a projection followed by several simple single-output GP problems. 
+Moreover, any technique that is applicable to single-output GP problems, such as inducing points \cite{Titsias:2009:Variational_Learning, Bui:2016:A_Unifying_Framework_for_Gaussian}, can be immediately leveraged by the OLMM. 
+
+\section{Preliminary Experiments}
+\label{sec:experiments}
+
+We perform three sets of experiments with different goals. 
+In the first experiment, we apply both the LMM and the OLMM to randomly generated data and analyse their speed and memory performance as a function of the number of latent processes. 
+In the second experiment, we generate synthetic data from an LMM prior (with a non-orthogonal mixing matrix) and study how closely an OLMM model can reproduce that. 
+Lastly, we apply the OLMM to a very large real-world data set, which is beyond the reach of the LMM, and compare its performance with that of individual GPs.
+
+\subsection{Scaling experiments}
+\label{subsec:scaling}
+
+In this experiment, we generated a random matrix with 1500 observations for 20 different outputs as the input data.
+Both the LMM and the OLMM models were constructed by using a mixing matrix of the form $H = U S^{1/2}$, with $U$ orthogonal and $S^{1/2}$ diagonal, squared exponential kernels for every latent process and zero mean.
+We then proceeded to time and measure the memory requirement for a single computation of the log-likelihood of the data as a function of the number of latent processes.
+The implementation of the LMM we adopted leverages the matrix lemma in order to scale with the number of latent processes, instead of with the number of outputs.
+\cref{fig:tscale} shows that, as previously stated, the LMM scales in time as $\O(n^3m^3)$, while the OLMM scales as $\O(n^3m)$. 
+In our case, this translates into either taking a couple of seconds for the OLMM or taking over 10 minutes for the LMM, using 25 latent processes.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=8cm]{timescaling.png}
+    \caption{SHITTY PLACEHOLDER FIGURE, REPLACE!!!! Time scaling of a single computation of the data log-likelihood for the LMM and for the OLMM as a function of the number of latent processes.}
+    \label{fig:tscale}
+\end{figure}
+
+Although not as striking as the one presented on time, the OLMM also brings significant memory gains over the LMM, as shown in \cref{fig:mscale}. 
+While memory scales as $\O(n^2 m^2)$ \todo{Check this, there is a different statement in the introduction} for the LMM, it scales as $\O(n^2 m)$ for the OLMM.
+In our case, this means utilising less than 5GB of memory for the OLMM, as opposed to about 45GB for the LMM, again, using 25 latent processes. 
+Note that this is a measure of total allocations, not of instantaneous RAM memory usage.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=8cm]{memscaling.png}
+    \caption{SHITTY PLACEHOLDER FIGURE, REPLACE!!!! Memory scaling of a single computation of the data log marginal likelihood for the LMM and for the OLMM as a function of the number of latent processes. \textcolor{red}{we probably want to put these figures side by side to save space}}
+    \label{fig:mscale}
+\end{figure}
+
+Thus, we show that, even for reasonably small systems, the OLMM greatly outperforms the LMM in both speed and memory.
+
+\subsection{Reconstruction experiments}
+
+Besides speed and memory performance, it is also paramount to assess accuracy.
+To that end, we perform the following experiment: an LMM prior is created, with a mixing matrix that \emph{cannot} be written as $H = U S^{1/2}$, with 3 latent processes and with 6 outputs.
+Kernels are squared exponentials with randomly chosen length-scales, variances and, in some cases, periodicities.
+We, then, build three other models: an OLMM initialised with a mixing matrix defined by $H_o = U S^{1/2}$ with $U, S, V = svd(H)$, $H$ the prior mixing matrix; an OLMM initialised with a random matrix; and an LMM initialised with a random matrix. All models share the same number of latent processes and the same latent kernels with the prior.
+For all three models, the mixing matrix was trained via the Adam algorithm for XXXXXXXX steps.
+All calculations were performed using the stheno \cref{stheno} code.
+The goal of these experiments is simply to see if the extra constraint over the mixing matrix increases the difficulty in the learning process.
+
+blablabla
+
+\paragraph{Scaling of the OLMM.}
+
+
+\paragraph{Orthogonality Constraint.}
+\begin{itemize}
+    \item Pick output and latent dimensionalities for LMM + number of data to observe. Choose prior over all parameters. (Eric)
+    \item Sample eg. 1000 times from the LMM prior. (Eric)
+    \item Assess performance (ie. NLML) of LMM given exact parameters. (Eric)
+    \item Assess performance (ie. NLML learning curves) of LMM with learned parameters using the correct latent dimensionality. (Eric)
+    \item Assess performance (ie. NLML learning curves) of OLMM with learned parameters for a variety of latent dimensionalities. (Will)
+    \item Questions this addresses:
+    \begin{itemize}
+        \item How does OLMM compare with true model?
+        \item Given that we probably can't recover the true model in practice, how does the OLMM compare with the LMM that we can actually learn?
+        \item If the latent dimensionality of the OLMM needs to increase to compensate for the orthogonality constraints on the mixing matrix, by how much do we generally need to increase it?
+        \item If we increase the dimensionality, and hence the number of model parameters, presumably our data efficiency decreases (ie. kless favourable learning curve). If so, by enough that we care?
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Climate Modelling.} This experiment is more for show than anything else. Just compare OLMM with independent GPs. We need to sort out some memory-related issues here. (Will)
+
+\begin{itemize}
+    \item CMIP5 General Circulation Model data over Europe
+    \item $n=500$ points used to learn parameters, $n=1000$ points used to test
+    \item $m=100$ latent processes used for OLMM.
+    \item Goal is to de-noise the simulator
+    \item Compared with reanalysis temperature data
+    \item The point is in no way the specifics of the problem, but rather that we've been able to run a large multi-output GP on a problem and use exact inference.
+\end{itemize}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+In this paper we presented the Orthogonal Linear Mixing Model, OLMM, which models a multi-output time series problem via an orthogonal basis with time-varying coefficients given by independent GPs and represents a variation over the traditional Linear Mixing Model, LMM.
+Under such framework, latent processes decouple and the problem is reduced to a set of single-output GP problems.
+Despite the LMM being one of the most popular multi-output GP models, due to its simplicity and ability to model reasonably large systems, we show that the OLMM significantly outperforms it, both in speed and in memory. 
+Moreover, all techniques that are applicable to single-output GPs can be extended to the OLMM.
+Effectively, the OLMM is a cheap, tractable, interpretable and accurate model for large multi-output time series.
+
+We show the power of the model via three experiments. 
+First, we show the significant speed and memory gains that the OLMM present over the LMM, which can easily reach orders of magnitude, even for relatively small systems.
+Second, we show that the extra constraint over the mixing matrix does not significantly increase the difficulty in the learning process, with an OLMM model performing very closely to an LMM prior, whose mixing matrix was intentionally built such as not to satisfy the conditions for the OLMM.
+Lastly, we apply the model to a notably large and challenging real-world data set and...
+
+Moreover, we also cure cancer and solve the Israel-Palestine conflict.
+
+\clearpage
+\bibliographystyle{unsrtnat}
+\bibliography{bibliography}
+
+\end{document}

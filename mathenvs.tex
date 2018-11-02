@@ -1,0 +1,131 @@
+% Define environments.
+\newlength{\thmtopsep}\setlength{\thmtopsep}{\topsep + \parskip + .5\baselineskip}
+\newlength{\thmbotsep}\setlength{\thmbotsep}{\topsep + .5\baselineskip}
+\newtheoremstyle{theoremstyle}
+    {\thmtopsep}{\thmbotsep}
+    {}           % Body font
+    {}           % Indent amount
+    {\bfseries}  % Theorem head font
+    {.}          % Punctuation after theorem head
+    {.5em}       % Space after theorem head
+    {}           % Theorem head spec
+\theoremstyle{theoremstyle}
+
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{model}{Model}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{theorem}{Theorem}[section]
+
+% Define environment QED markers.
+\preto{\assumption}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endassumption}{\popQED}
+\preto{\corollary}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endcorollary}{\popQED}
+\preto{\definition}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\enddefinition}{\popQED}
+\preto{\example}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endexample}{\popQED}
+\preto{\fact}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endfact}{\popQED}
+\preto{\lemma}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endlemma}{\popQED}
+\preto{\model}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endmodel}{\popQED}
+\preto{\proposition}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endproposition}{\popQED}
+\preto{\remark}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endremark}{\popQED}
+\preto{\theorem}{\renewcommand\qedsymbol{$\blacktriangleleft$}\pushQED{\qed}}
+\preto{\endtheorem}{\popQED}
+
+\newtheoremstyle{proofstyle}
+    {\thmtopsep}{\thmbotsep}
+    {}           % Body font
+    {}           % Indent amount
+    {\itshape}   % Theorem head font
+    {.}          % Punctuation after theorem head
+    {.5em}       % Space after theorem head
+    {}           % Theorem head spec
+\theoremstyle{proofstyle}
+\let\proof\relax
+\newtheorem*{proof}{Proof}
+\AtEndEnvironment{proof}{\hfill{}Q.E.D.}
+
+% Set referencing formats.
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{example}{Example}{Examples}
+\Crefname{example}{Example}{Examples}
+\crefname{fact}{Fact}{Facts}
+\Crefname{fact}{Fact}{Facts}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{model}{Model}{Models}
+\Crefname{model}{Model}{Models}
+\crefname{proposition}{Proposition}{Propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+
+% Style enumerate:
+\setenumerate{}
+\setlist[enumerate]{label=(\arabic*)}
+\setlist[itemize]{label=\textbullet}
+
+% Referentiable list items in environments
+\newlist{asslist}{enumerate}{1}
+\setlist[asslist]{ref=\theassumption.(\arabic*), label=(\arabic*)}
+\crefname{asslisti}{Assumption}{Assumptions}
+\Crefname{asslisti}{Assumption}{Assumptions}
+\newlist{corlist}{enumerate}{1}
+\setlist[corlist]{ref=\thecorollary.(\arabic*), label=(\arabic*)}
+\crefname{corlisti}{Corollary}{Corollaries}
+\Crefname{corlisti}{Corollary}{Corollaries}
+\newlist{deflist}{enumerate}{1}
+\setlist[deflist]{ref=\thedefinition.(\arabic*), label=(\arabic*)}
+\crefname{deflisti}{Definition}{Definitions}
+\Crefname{deflisti}{Definition}{Definitions}
+\newlist{exlist}{enumerate}{1}
+\setlist[exlist]{ref=\thexample.(\arabic*), label=(\arabic*)}
+\crefname{exlisti}{Example}{Examples}
+\Crefname{exlisti}{Example}{Examples}
+\newlist{factlist}{enumerate}{1}
+\setlist[factlist]{ref=\thefact.(\arabic*), label=(\arabic*)}
+\crefname{factlisti}{Fact}{Facts}
+\Crefname{factlisti}{Fact}{Facts}
+\newlist{lemlist}{enumerate}{1}
+\setlist[lemlist]{ref=\thelemma.(\arabic*), label=(\arabic*)}
+\crefname{lemlisti}{Lemma}{Lemmas}
+\Crefname{lemlisti}{Lemma}{Lemmas}
+\newlist{modlist}{enumerate}{1}
+\setlist[modlist]{ref=\themodel.(\arabic*), label=(\arabic*)}
+\crefname{modlisti}{Model}{Models}
+\Crefname{modlisti}{Model}{Models}
+\newlist{proplist}{enumerate}{1}
+\setlist[proplist]{ref=\theproposition.(\arabic*), label=(\arabic*)}
+\crefname{proplisti}{Proposition}{Propositions}
+\Crefname{proplisti}{Proposition}{Propositions}
+\newlist{remlist}{enumerate}{1}
+\setlist[remlist]{ref=\theremark.(\arabic*), label=(\arabic*)}
+\crefname{remlisti}{Remark}{Remarks}
+\Crefname{remlisti}{Remark}{Remarks}
+\newlist{thmlist}{enumerate}{1}
+\setlist[thmlist]{ref=\thetheorem.(\arabic*), label=(\arabic*)}
+\crefname{thmlisti}{Theorem}{Theorems}
+\Crefname{thmlisti}{Theorem}{Theorems}
+
+% Reference numbers in the list.
+\newcommand{\listnum}[1]{(#1)}
+\newcommand{\listimpl}[2]{\listnum{#1} $\Rightarrow$ \listnum{#2}:}

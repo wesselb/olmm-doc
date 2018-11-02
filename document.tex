@@ -1,0 +1,46 @@
+% Set the default float placement correctly.
+\floatplacement{figure}{htbp}
+\floatplacement{table}{htbp}
+
+% Set spacing between figures and text.
+\setlength{\textfloatsep}{30pt plus 1.0pt minus 2.0pt}
+\setlength{\floatsep}{30pt plus 1.0pt minus 2.0pt}
+\setlength{\intextsep}{30pt plus 1.0pt minus 2.0pt}
+
+% Define outline tools.
+\newcommand{\outline}[1]{
+    \parbox{\linewidth}{
+        \singlespacing
+        \color{darkgreen}
+        #1
+    }\vspace{\parsep}
+}
+\newlist{outlinelist}{enumerate}{1}
+\setlist[outlinelist]{
+    label=\arabic*.,
+    noitemsep,
+    topsep=0pt,
+    parsep=0pt,
+    partopsep=0pt
+}
+\newcommand{\note}[1]{{\color{darkred}#1}}
+
+% Left-justified text in tabularx environment:
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks,
+    citecolor = black,
+    filecolor = black,
+    linkcolor = black,
+    urlcolor  = black
+}
+
+% Scale TikZ pictures up.
+\tikzset{
+    every picture/.append style = {
+        xscale = 2,
+        yscale = 2
+    }
+}
